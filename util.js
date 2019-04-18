@@ -100,3 +100,119 @@ function debounce (func, wait = 50, immediate = true) {
         }
     }
 }
+/**、
+ * 时间格式化
+ * 年/月/日  时:分:秒
+ */
+const formatTime = date => {
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+  const hour = date.getHours()
+  const minute = date.getMinutes()
+  const second = date.getSeconds()
+  return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute, second].map(formatNumber).join(':')
+}
+/**
+ * 数字格式化  防止显示错误
+ */
+const formatNumber = n => {
+  n = n.toString()
+  return n[1] ? n : '0' + n
+}
+/**
+ * 函数节流   间隔时间1500ms
+ */
+const throttle = (fn, gapTime) => {
+  if (gapTime == null || gapTime == undefined) {
+    gapTime = 1500;
+  }
+  let _lastTime = null;
+  return function () {
+    let _nowTime = +new Date();
+    if (_nowTime - _lastTime > gapTime || !_lastTime) {
+      fn.apply(this, arguments);
+      _lastTime = _nowTime;
+    }
+  }
+};
+
+/**
+ * trim 正则
+ * @param {Object} str
+ */
+const trim = function (str) {
+  return str.replace(/(^\s*)|(\s*$)/g,"");
+};
+/**
+ * 输入框检测
+ */
+const checkInput = (value) => {
+  var regEmoji = /[^\u0020-\u007E\u00A0-\u00BE\u2E80-\uA4CF\uF900-\uFAFF\uFE30-\uFE4F\uFF00-\uFFEF\u0080-\u009F\u2000-\u201f\u2026\u2022\u20ac\r\n]/g;
+  var regEn = /[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/g;
+  var regCn = /[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/g;
+  var regBlack = /(^\s*)|(\s*$)/g;
+  if (regEmoji.test(value)) {
+    wx.showToast({
+      title: '不允许使用表情',
+      icon: 'none',
+      duration: 2000
+    });
+    return false;
+  }
+  if (regBlack.test(value)) {
+    wx.showToast({
+      title: '不允许使用空格',
+      icon: 'none',
+      duration: 2000
+    });
+    return false;
+  }
+  if (regEn.test(value) || regCn.text(value)) {
+    wx.showToast({
+      title: '不允许使用符号',
+      icon: 'none',
+      duration: 2000
+    });
+    return false;
+  }
+  return true;
+};
+/**
+ * 清楚所有定时器
+ */
+const clearAllInterval = () => {
+  var last = setInterval();
+  for(;last >= 0;last--){
+    clearInterval(last);
+  }
+};
+/**
+ * 金钱格式化 保留小数点后两位小数
+ */
+const moneyFormat = (value) => {
+  if(!value)
+    return "0.00";
+  value = parseFloat(value).toFixed(2);
+  var numsArr = value.toString().split(".");
+  var num1 = numsArr[1].substring(0,2);
+return  numsArr[0] + "." +  num1
+};
+/**
+ * 模块抛出
+ */
+module.exports = {
+  cartInof: cartInof,
+  formatTime: formatTime,
+  sumCart: sumCart,
+  throttle: throttle,
+  logsnew: logsnew,
+  beginloading: beginloading,
+  endloading: endloading,
+  networkType: networkType,
+  networkChange: networkChange,
+  trim:trim,
+  checkInput:checkInput,
+  clearAllInterval:clearAllInterval,
+  moneyFormat:moneyFormat
+};
