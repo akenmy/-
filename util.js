@@ -476,6 +476,15 @@ function getDomain(url) {
   return '';
 }
 /**
+ * 判断Object是不是空
+ * @param {Object} obj
+ */
+const isEmptyObject = function (obj){
+  return Object.getOwnPropertyNames(obj).length === 0;
+}
+
+
+/**
  * 模块抛出
  */
 module.exports = {
