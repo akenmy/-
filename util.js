@@ -483,7 +483,89 @@ const isEmptyObject = function (obj){
   return Object.getOwnPropertyNames(obj).length === 0;
 }
 
+/**
+   * 格式化金额
+   * @param {number} value 金额
+   * @param {string} [currencyType] 货币符号
+   */
+export function formatPrice (value = '0', currencyType = '￥') {
+  let res
+  if (value.toString().indexOf('.') === -1) {
+    res = (value || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,') + '.00'
+  } else {
+    let prev = value.toString().split('.')[0]
+    let next = value.toString().split('.')[1] < 10 ? value.toString().split('.')[1] + '0' : value.toString().split('.')[1]
+    if (next.length > 2) {
+      // 如果第三位大于5，向前进一位
+      if (next[2] >= 5) {
+        let last = next[1]
+        last++
+        next = `${next[0]}${last}`
+      } else {
+        next = next.substring(0, 2)
+      }
+    }
+    res = (prev || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,') + '.' + next
+  }
+  return currencyType + res
+}
+/**
+ * 将手机号中间4位数字替换为星号
+ * @param {*} phone 待处理手机号
+ */
+export function hideMobile (phone) {
+  phone = String(phone)
+  return `${phone.substr(0, 3)}****${phone.substr(-4, 4)}`
+}
 
+/**
+ * 日期格式化
+ * @param {*} fmt 日期格式（yyyy-MM-dd）
+*/
+export function formatDate (olddate, fmt) {
+  // 如果有T 转为空格
+  olddate = olddate.replace(/T/g, ' ')
+  // 兼容ios时间
+  let newdate = olddate.replace(/-/g, '/')
+  let date = new Date(newdate)
+  if (/(y+)/.test(fmt)) {
+    fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
+  }
+  let o = {
+    'M+': date.getMonth() + 1,
+    'd+': date.getDate(),
+    'h+': date.getHours(),
+    'm+': date.getMinutes(),
+    's+': date.getSeconds()
+  }
+  for (let k in o) {
+    if (new RegExp(`(${k})`).test(fmt)) {
+      let str = o[k] + ''
+      fmt = fmt.replace(RegExp.$1, RegExp.$1.length === 1 ? str : padLeftZero(str))
+    }
+  }
+  return fmt
+}
+function padLeftZero (str) {
+  return ('00' + str).substr(str.length)
+}
+
+	//判断设备：移动还是pc
+	function browserRedirect(data) {
+        var sUserAgent = navigator.userAgent.toLowerCase();
+        var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+        var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+        var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+        var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+        var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+        var bIsAndroid = sUserAgent.match(/android/i) == "android";
+        var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+        var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+        if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {
+        } else {
+        	
+        }
+    }
 /**
  * 模块抛出
  */
