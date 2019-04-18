@@ -1,0 +1,24 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title></title>
+</head>
+<body>
+<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+<script>
+    alert(returnCitySN['cip'] + returnCitySN['cname']);
+	function MacInfo(){
+      var locator =new ActiveXObject ("WbemScripting.SWbemLocator");
+      var service = locator.ConnectServer(".");
+      var properties = service.ExecQuery("Select * from Win32_NetworkAdapterConfiguration Where IPEnabled =True");
+      var e =new Enumerator (properties);
+      {
+            var p = e.item();
+           var mac = p.MACAddress;
+           alert(mac)
+      }
+	}
+	MacInfo();
+</script>
+</body>
+</html>
